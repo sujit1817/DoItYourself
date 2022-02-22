@@ -1,0 +1,166 @@
+Assignment 1
+
+Date : 21.02.2022
+----------------------------
+1.Check the given number is EVEN or ODD. 
+2.Write a Java Program to find the Factorial of given number. 
+3.Find the Factorial of a number using Recursion. 
+4.Swap two numbers without using third variable approach 1. 
+5.Swap two numbers without using third variable approach 2. 
+6.Swap two numbers without using third variable approach 3. 
+7.How to check the given number is Positive or Negative in Java? 
+8.Write a Java Program to find whether given number is Leap year or NOT? 
+9.Write a Java Program to Print 1 To 10 Without Using Loop. 
+10.Write a Java Program to print the digits of a Given Number. 
+11.Write a Java Program to print all the Factors of the Given number. 
+12.Write a Java Program to find sum of the digits of a given number. 
+13.Write a Java Program to find the smallest of 3 numbers (a,b,c) without using < or > symbol? 
+14.How to add two numbers without using the arithmetic operators in Java? 
+15.Write a java program to Reverse a given number. 
+16.Write a Java Program to find GCD of two given numbers. 
+17.Write a java program to LCM of TWO given number. 
+18.Write a java program to LCM of TWO given number using Prime Factors method. 
+19.Check whether the Given Number is a Palindrome or NOT. 
+20.Write a Java Program to print all the Prime Factors of the Given Number.
+
+------------------------------------------------------------------------------
+// Qn.1) Java Program to Check Whether a Number is Even or Odd
+----------------------------------------------------------
+import java.util.Scanner;
+
+public class EvenOdd {
+	  public static void main(String[] args) {
+
+Scanner sc=new Scanner(System.in);
+
+System.out.print("Enter any Number : ");
+
+int n1 = sc.nextInt();
+
+if(n1==0)
+
+System.out.println(n1+ " is neither even nor odd");
+
+else
+	if(n1%2==0)
+
+System.out.println(n1+ " is even");
+
+else
+
+System.out.println(n1+ " is odd");
+}
+}
+----------------------------------------------------------
+Qn2. Write a Java Program to find the Factorial of given number.
+
+-----------------------------------------------------------------
+Q4,5,6. Swap two numbers without using third variable approach 1. 
+------------------------------------------------------------------------
+/* Q4
+//logic 2- use + and  - without using third variable
+int a=10,b=20;
+	System.out.println("Before Swapping values are "+a+" "+b);	
+		
+a=a+b; //10+20=30
+b=a-b;// 30-20=10
+a=a-b;// 30-10=20
+
+System.out.println("After swapping values "+a+" "+b);	
+*/
+
+/*
+// Q5 a and b should not be zero
+int a=10,b=20;
+System.out.println("Before Swapping values are "+a+" "+b);
+	a=a*b; //10*20=200
+b=a/b; //200/20=10
+a=a/b;	//200/10=20
+System.out.println("After swapping values "+a+" "+b);	
+*/
+
+
+/*
+//  Q6   bitwise XOR (^)
+int a=10,b=20;
+System.out.println("Before Swapping values are "+a+" "+b);
+a=a^b;
+b=a^b;
+a=a^b;
+System.out.println("After swapping values "+a+" "+b);	
+*/
+
+/*
+// logic 5 one line statement
+	 a=10,b=20
+System.out.println("Before Swapping values are "+a+" "+b);
+	b=a+b-(a=b);
+	
+
+System.out.println("After swapping values "+a+" "+b);	
+*/
+	}
+}
+
+------------------------------------------------------------------------------------
+7.How to check the given number is Positive or Negative in Java? 
+------------------------------------------------------------------------------------
+
+import java.util.Scanner;  
+ public class PosOrNeg  
+ {  
+   public static void main(String[] args)   
+ {  
+    int n1;  
+
+    Scanner sc = new Scanner(System.in);  
+    System.out.print("Enter a number: ");  
+
+n1 = sc.nextInt();  
+
+if(n1>0)  
+{  
+    System.out.println("The number is positive.");  
+}  
+
+else if(n1<0)  
+ {  
+     System.out.println("The number is negative.");  
+ }  
+  
+else  
+ {  
+     System.out.println("The number is zero.");  
+ }  
+}  
+}  
+-------------------------------------------------------------------------------
+
+// 19.Check whether the Given Number is a Palindrome or NOT. 
+public class palindrome{
+	public static void main(String args[])
+	{
+	Scanner sc=new Scanner(System.in);
+	System.out.println("Enter a Number : ");
+	int num=sc.nextInt();  // 1234
+	
+	//1. using algorithm
+	int temp=num;
+	int rev=0;
+	while(temp!=0)
+	{
+		int rem=temp%10;
+		rev=rev*10+rem;
+	//or
+	// rev=rev*10+num%10; 
+		temp=temp/10;	
+	}
+	System.out.println("Reverse Number is "+rev);
+	
+	if(rev==num)
+		System.out.println("is palindrome ");
+	else
+	System.out.println("not palindrome");
+		
+}
+}
