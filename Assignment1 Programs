@@ -3,7 +3,8 @@ Assignment 1
 Date : 21.02.2022
 ----------------------------
 3.Find the Factorial of a number using Recursion. 
-12.Write a Java Program to find sum of the digits of a given number. 
+
+
 13.Write a Java Program to find the smallest of 3 numbers (a,b,c) without using < or > symbol? 
 14.How to add two numbers without using the arithmetic operators in Java? 
 16.Write a Java Program to find GCD of two given numbers. 
@@ -265,6 +266,48 @@ class PrintDigit{
 --------------------------------------------------------------------------------------------------------------------------------------
 
 // 11.Write a Java Program to print all the Factors of the Given number. 
+------------------------------------------------------------------------------
+import java.util.*;
+public class FindFactorsOfNumber{
+	public static void main(String[] args){
+		int num;
+		
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter a number whose factors you want : ");
+		num=sc.nextInt();
+		
+		for(int i=1;i<=num;i++)
+		{
+			if(num%i==0){
+				System.out.println(i);
+			}
+		}
+	}
+}
+
+-----------------------------------------------------------------------------------------------
+12.Write a Java Program to find sum of the digits of a given number. 
+-----------------------------------------------------------------------------------------------
+public class SumOfDigits{
+	public static void main(String[] args)
+	{
+		int num=1503;
+		int rem=0;
+		int sum=0;
+		
+		while(num>0)
+		{
+			rem=num%10;
+			sum=sum+rem;
+			num=num/10;
+			
+		}
+		
+		System.out.println(sum);
+	}
+	
+}
+-----------------------------------------------------------------------------------------------
 
 
 --------------------------------------------------------------------------------------------------------------------------------------
