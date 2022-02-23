@@ -6,7 +6,7 @@ Date : 21.02.2022
 3.Find the Factorial of a number using Recursion. 
 
 
-8.Write a Java Program to find whether given number is Leap year or NOT? 
+
 
 10.Write a Java Program to print the digits of a Given Number. 
 11.Write a Java Program to print all the Factors of the Given number. 
@@ -177,6 +177,52 @@ else
  }  
 }  
 }  
+--------------------------------------------------------------------------------
+8.Write a Java Program to find whether given number is Leap year or NOT? 
+---------------------------------------------------------------------------------
+class LeapYear{
+	public static void main(String args[])
+	{
+		int year=2016;
+		
+		if(year%4==0)
+		{
+			if(year%100==0)
+			{
+				if(year%400==0)
+				{
+					System.out.println(year+" is Leap year");	
+				}
+				else
+				{
+					System.out.println(year+" is not a Leap year");
+				}
+			}
+			else
+			{
+				System.out.println(year+" is Leap year");
+			}				
+		}
+		else
+		{
+			System.out.println(year+" is not a Leap year");
+		}
+	}
+}
+----------------------------------------------------
+class LeapYear{
+	public static void main(String args[])
+	{
+		int year=2016;
+		if((year%400==0) || (year%100!=0 && year%4==0))
+		{
+		System.out.println(year+" is Leap year");	
+		}
+		else
+			System.out.println(year+" is not Leap year");
+	}
+}
+
 -------------------------------------------------------------------------------
 Qn.9. Write a Java Program to Print 1 To 10 Without Using Loop. 
 -------------------------------------------------------------------------------
