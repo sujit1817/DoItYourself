@@ -2,15 +2,12 @@ Assignment 1
 
 Date : 21.02.2022
 ----------------------------
-1.Check the given number is EVEN or ODD. 
-2.Write a Java Program to find the Factorial of given number. 
+
 3.Find the Factorial of a number using Recursion. 
-4.Swap two numbers without using third variable approach 1. 
-5.Swap two numbers without using third variable approach 2. 
-6.Swap two numbers without using third variable approach 3. 
-7.How to check the given number is Positive or Negative in Java? 
+
+
 8.Write a Java Program to find whether given number is Leap year or NOT? 
-9.Write a Java Program to Print 1 To 10 Without Using Loop. 
+
 10.Write a Java Program to print the digits of a Given Number. 
 11.Write a Java Program to print all the Factors of the Given number. 
 12.Write a Java Program to find sum of the digits of a given number. 
@@ -20,7 +17,7 @@ Date : 21.02.2022
 16.Write a Java Program to find GCD of two given numbers. 
 17.Write a java program to LCM of TWO given number. 
 18.Write a java program to LCM of TWO given number using Prime Factors method. 
-19.Check whether the Given Number is a Palindrome or NOT. 
+
 20.Write a Java Program to print all the Prime Factors of the Given Number.
 
 ------------------------------------------------------------------------------
@@ -51,13 +48,69 @@ else
 System.out.println(n1+ " is odd");
 }
 }
-----------------------------------------------------------
+------------------------------------------------------------------
 Qn2. Write a Java Program to find the Factorial of given number.
+------------------------------------------------------------------
+public class Factorial{
+	
+	public static void main(String[] args)
+	{
+		Scanner sc=new Scanner(System.in);
+		
+		int no;
+		System.out.print("Enter any Number : ");
+		no=sc.nextInt();
+        
+		int fact =1;
 
------------------------------------------------------------------
+		for(int i=1;i<=no;i++)
+		{
+		fact=fact*i	;
+		}
+		System.out.print("Factorial of "+no+" is "+fact);
+		
+	}
+	
+}
+----------------------------------------------------------------
+/*
+public class Factorial{
+	
+	public static void main(String[] args)
+	{
+		
+		int no =10;
+int fact =1;
+
+		for(int i=1;i<=no;i++)
+		{
+		fact=fact*i	;
+		}
+		System.out.print("Factorial of "+no+" is "+fact);
+		
+	}
+	
+}
+*/
+------------------------------------------------------------------------
 Q4,5,6. Swap two numbers without using third variable approach 1. 
 ------------------------------------------------------------------------
-/* Q4
+public class Swapping2Numbers{
+	public static void main(String args[])
+	{
+/*	Practice
+	int a=10,b=20;
+		System.out.println("Before Swapping values are "+a+" "+b);
+		
+// logic1= third variable		
+int t=a;
+a=b;
+b=t;
+
+System.out.println("After swapping values "+a+" "+b);	
+*/
+----------------------------------------------------------------
+/*Q4
 //logic 2- use + and  - without using third variable
 int a=10,b=20;
 	System.out.println("Before Swapping values are "+a+" "+b);	
@@ -68,9 +121,9 @@ a=a-b;// 30-10=20
 
 System.out.println("After swapping values "+a+" "+b);	
 */
-
-/*
-// Q5 a and b should not be zero
+----------------------------------------------------------------
+/* Q5
+// logic 3  a and b should not be zero
 int a=10,b=20;
 System.out.println("Before Swapping values are "+a+" "+b);
 	a=a*b; //10*20=200
@@ -78,27 +131,17 @@ b=a/b; //200/20=10
 a=a/b;	//200/10=20
 System.out.println("After swapping values "+a+" "+b);	
 */
+----------------------------------------------------------------
 
-
-/*
-//  Q6   bitwise XOR (^)
+// Q6
+//  logic 4    bitwise XOR (^)
 int a=10,b=20;
 System.out.println("Before Swapping values are "+a+" "+b);
 a=a^b;
 b=a^b;
 a=a^b;
 System.out.println("After swapping values "+a+" "+b);	
-*/
 
-/*
-// logic 5 one line statement
-	 a=10,b=20
-System.out.println("Before Swapping values are "+a+" "+b);
-	b=a+b-(a=b);
-	
-
-System.out.println("After swapping values "+a+" "+b);	
-*/
 	}
 }
 
