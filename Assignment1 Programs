@@ -135,6 +135,24 @@ else
 }  
 }  
 -------------------------------------------------------------------------------
+Qn.9. Write a Java Program to Print 1 To 10 Without Using Loop. 
+-------------------------------------------------------------------------------
+public class Main
+{
+    public static void printNum(int num){
+        if(num<=10)
+        {
+            System.out.println(num);
+            printNum(num+1);
+        }
+    }
+    
+	public static void main(String[] args) {
+	    
+	printNum(1);
+	}
+}
+-----------------------------------------------------------------------------
 
 // 19.Check whether the Given Number is a Palindrome or NOT. 
 public class palindrome{
