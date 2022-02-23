@@ -8,7 +8,7 @@ Date : 21.02.2022
 12.Write a Java Program to find sum of the digits of a given number. 
 13.Write a Java Program to find the smallest of 3 numbers (a,b,c) without using < or > symbol? 
 14.How to add two numbers without using the arithmetic operators in Java? 
-15.Write a java program to Reverse a given number. 
+
 16.Write a Java Program to find GCD of two given numbers. 
 17.Write a java program to LCM of TWO given number. 
 18.Write a java program to LCM of TWO given number using Prime Factors method. 
@@ -261,7 +261,29 @@ class PrintDigit{
 -------------------------------------------------------------------------------
 // 11.Write a Java Program to print all the Factors of the Given number. 
 
-
+-------------------------------------------------------------------------------
+// 15.Write a java program to Reverse a given number. 
+public class Reversenumber{
+	public static void main(String args[])
+	{
+	Scanner sc=new Scanner(System.in);
+	System.out.println("Enter a Number : ");
+	int num=sc.nextInt();  // 1234
+	
+	//1. using algorithm
+	
+	int rev=0;
+	while(num!=0)
+	{
+		int rem=num%10;
+		rev =rev*10+rem;
+	//or
+	// rev=rev*10+num%10; 
+		num=num/10;	
+	}
+	System.out.println("Reverse Number is "+rev);
+	}	
+}
 
 -------------------------------------------------------------------------------
 // 19.Check whether the Given Number is a Palindrome or NOT. 
