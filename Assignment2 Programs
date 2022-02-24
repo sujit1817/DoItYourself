@@ -1,3 +1,33 @@
+1.Calculate the average of given array. 
+
+import java.util.*;
+public class ArrayAvg{
+	
+	public static void main(String args[])
+	{
+		//input
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("Enter how many elements you want? ");
+		int n=sc.nextInt();
+		
+		// array declaration
+		double[] arr =new double[n];
+		System.out.println("Enter" +n+" elements in an array");
+		double sum=0;
+		
+		for(int i=0; i<n;i++)
+		{
+			arr[i]=sc.nextDouble();
+			sum=sum+arr[i];
+		}
+		System.out.println("Average of given array of "+n+" elements is "+sum/n);
+		
+	}
+}
+---------------------------------------------------------------------------
+2.Find the second largest number in the given array. 
+
 import java.util.Arrays;
 
 public class SecondlargestNumberInArray {
@@ -16,6 +46,7 @@ public class SecondlargestNumberInArray {
 
 }
 -------------------------------------------------------------------------------
+3.Find the second minimum number in the given array. 
 
 // Find the second minimum number in the given array.
 import java.util.Arrays;
@@ -33,7 +64,7 @@ public class SmallestNumberInAnArray {
     System.out.println("2nd smallest element is "+res);
    }
   }
-  -------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
   import java.util.*;
 
 public class SmallestNumberInAnArray {
@@ -62,4 +93,5 @@ public class SmallestNumberInAnArray {
 	}
 }
   
-  
+--------------------------------------------------------------------------------------
+4.Find the missing Number in the given array of 1 to N. 
