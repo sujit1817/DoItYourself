@@ -15,3 +15,25 @@ public class SecondlargestNumberInArray {
 	}
 
 }
+-------------------------------------------------------------------------------
+
+// Find the second minimum number in the given array.
+import java.util.Arrays;
+
+public class SmallestNumberInAnArray {
+   public static void main(String args[]){
+   int array[]={20,40,25,50,60,30};
+   int size=array.length;
+   
+   Arrays.sort(array);
+   System.out.println("Sorted array "+Arrays.toString(array));
+   
+   int res=array[1];
+   
+    System.out.println("2nd smallest element is "+res);
+   }
+  }
+  -------------------------------------------------------------------------------
+  
+  
+  
