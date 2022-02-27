@@ -133,17 +133,73 @@ class IntersectionOfTwoArrays{
 	}
 }
 --------------------------------------------------------------------------------------
-6.Write a Java Program to find the Intersection of Two Sorted arrays. 
+6.Write a Java Program to find the Intersection of Two Sorted arrays.
+class IntersectionofTwo {
+   public static void main(String args[]) {
+	  int arr1[] = {2, 4, 6, 8, 9};
+      int arr2[] = {1, 3, 4, 5, 6, 8, 9};
+   int i = 0, j = 0;
+  
+System.out.print("Intersection of two arrays is: ");  
+   while(i<arr1.length && j<arr2.length)
+   {
+	   if(arr1[i]<arr2[j])
+		   i++;
+	   else if(arr2[j]<arr1[i])
+		   j++;
+	   else{
+		   System.out.print(arr2[j++]+" ");
+	   }
+     }
+   }
+}
 
 --------------------------------------------------------------------------------------
 7.Write a Java Program to find the Union of Two Arrays (UnSorted Array). 
+import java.util.*;
+class UnionofTwo{
+	public static void main(String args[]){
+		int a1[] = {2, 4, 6, 8, 9};
+        int a2[] = {1, 10, 4, 5, 6, 8, 9};
+		
+		Set<Integer> set=new HashSet<>();
+		
+		for(int x:a1 ){
+			set.add(x);	
+		}
+		
+		for(int x:a2 ){
+			set.add(x);	
+		}
+		System.out.print(set);
 
+	}
+}
 --------------------------------------------------------------------------------------
 8.Write a Java Program to find the Union of Two Arrays (Sorted Arrays). 
 
+
 --------------------------------------------------------------------------------------
 9.Write a Java Program to find the Union of Tow Arrays using HashSet. 
+import java.util.*;
+class UnionofTwo{
+	public static void main(String args[]){
+		int a1[] = {2, 4, 6, 8, 9};
+        int a2[] = {1, 10, 4, 5, 6, 8, 9};
+		
+		Set<Integer> set=new HashSet<>();
+		
+		for(int x:a1 ){
+			set.add(x);	
+		}
+		
+		for(int x:a2 ){
+			set.add(x);	
+		}
+		System.out.print(set);
 
+	}
+}
 --------------------------------------------------------------------------------------
 10.Write a Java Program to Move all Zero to End of the Array. 
 
