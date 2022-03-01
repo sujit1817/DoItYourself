@@ -223,3 +223,33 @@ System.out.println(arr[j]);
 	}
 }
 --------------------------------------------------------------------------------------
+11.Write a Java Program to Move all Zeros to Start of the Array. 
+
+--------------------------------------------------------------------------------------
+12.Write a Java Program to Reverse the given array without using additional Array. 
+
+--------------------------------------------------------------------------------------
+13.Write a program to find the Most Frequent Element in an given array. 
+
+--------------------------------------------------------------------------------------
+14.Write a program to find the Most Frequent Element using Sorting. 
+
+--------------------------------------------------------------------------------------
+15.Write a program to find the Most Frequent Element using HashTable. 
+
+--------------------------------------------------------------------------------------
+16.Write a java program to Rotate the Given Array d times. 
+
+--------------------------------------------------------------------------------------
+17.Find the pair of elements(X+Y) in the array whose sum is equal to given number Z. 
+
+--------------------------------------------------------------------------------------
+18.Write a java program to check Given String is Palindrome or NOT. 
+
+--------------------------------------------------------------------------------------
+19.How to Swap two Strings without using third (temporary) variable? 
+
+--------------------------------------------------------------------------------------
+20.Write a java program to Reverse a String without using in-build function.
+
+--------------------------------------------------------------------------------------
