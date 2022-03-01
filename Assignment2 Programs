@@ -210,20 +210,72 @@ int count=0;
 
 for(int i=0;i<len;i++){
 	if(arr[i]!=0){
-		arr[count++]=arr[i]; 
+		arr[count]=arr[i]; 
+		
+		count++;
 	}
 }	
 while(count<len){
-	arr[count++]=0;
+	arr[count]=0;
+	count++;
 }
 
 for(int j=0;j<len;j++){
-System.out.println(arr[j]);
+System.out.print(arr[j]+" ");
 }
 	}
 }
 --------------------------------------------------------------------------------------
 11.Write a Java Program to Move all Zeros to Start of the Array. 
+import java.util.*;
+public class MoveAllZerosToStart{
+	public static void main(String[] args){
+	
+	Scanner sc=new Scanner(System.in);
+	System.out.println("Enter the size of the array : ");
+	
+	int size=sc.nextInt();
+	int[] arr=new int[size];
+
+	System.out.println("Enter array elements : ");
+	
+	// for taking array elements
+	for(int i=0;i<size;i++){
+		arr[i]=sc.nextInt();
+	}
+	
+	// counter variable which starts from size-1
+	//suppose size is 5 then counter starts from 4
+	int counter=size-1;
+	
+	// for array of size five  index starts from 0 to 4
+	// i=size-1=5-1=4 i.e. index 4 means last location so elements will be inserted from last index and condition is i>=0
+	// then i-- means reverse elements insertion
+	// If statement inside for loop
+	for(int i=size-1;i>=0;i--)
+	{
+		// if not zero then put arr[i] in arr[counter]
+		// and counter-- 
+	if(arr[i]!=0){
+		arr[counter]=arr[i];
+		counter--;
+	}	
+	}
+	
+	// suppose all non-zero elements inserted from last. and counter still have spaces means zeros are there so in the remaining spaces we have to put zeroes
+	//so in while loop check if counter is greater than zero or not. If greater then there is a space and we can put o  at that places and decrement counter
+	// until the space gets occupied with zero and this is how we move all zeros at start
+	while(counter>=0){
+		arr[counter]=0;
+		counter--;
+	}
+	
+	System.out.println(Arrays.toString(arr));
+	// to print all array elements above line
+	sc.close();
+
+	}
+}
 
 --------------------------------------------------------------------------------------
 12.Write a Java Program to Reverse the given array without using additional Array. 
