@@ -279,7 +279,60 @@ public class MoveAllZerosToStart{
 
 --------------------------------------------------------------------------------------
 12.Write a Java Program to Reverse the given array without using additional Array. 
+import java.util.*;
+class ArrayReverse{
+	public static void main(String[] args){
+	Scanner sujit=new Scanner(System.in);
 
+	System.out.println("Enter the size of array ");
+	int size=sujit.nextInt();
+	
+	// declare an array
+	int arr[]=new int[size];
+	
+	System.out.println("Enter an array values ");
+	
+	// Input array values
+	for(int i=0;i<arr.length;i++){
+		arr[i]=sujit.nextInt();
+
+	}
+	
+	int temp;
+	int start=0;
+	int end=size-1;
+	
+		// 1,3,5,6,9
+	while(start<end)
+	{
+		// 0<4
+		//so store element at start in temp i.e. element at 0 is 1 store in start
+		// element at end i.e. index 4 is 9.store it in arr[start]
+		// and store temp in arr[end]
+		// replaced
+		// then start++ will move index of start to 1 and 
+		// end-- will move index of end which 4 to index 3 and continues in same manner
+		
+		temp=arr[start];
+		arr[start]=arr[end];
+		arr[end]=temp;
+		
+		start++;
+		end--;
+	}
+System.out.print("Array after reverse ");
+
+for(int i=0;i<arr.length;i++){
+		
+System.out.print( arr[i]+" ");
+	}
+	/*
+	for(int j=0;j<arr.length;j++)
+	{
+		System.out.print( arr[j]);
+	}*/
+	}
+}
 --------------------------------------------------------------------------------------
 13.Write a program to find the Most Frequent Element in an given array. 
 
