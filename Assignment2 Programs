@@ -349,8 +349,36 @@ System.out.print( arr[i]+" ");
 17.Find the pair of elements(X+Y) in the array whose sum is equal to given number Z. 
 
 --------------------------------------------------------------------------------------
-18.Write a java program to check Given String is Palindrome or NOT. 
+18.Write a java program to check Given String is Palindrome or NOT.
 
+import java.util.*;
+class PalindromeString{
+	public static void main(String[] args){
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("Enter a String : ");
+		String str=sc.next();
+		String org_str=str;
+		
+		String rev="";
+		
+		int len=str.length();
+		
+		for(int i=len-1;i>=0;i--){
+			rev=rev+str.charAt(i);
+		}
+		
+	
+		if(org_str.equals(rev)){
+			System.out.println(org_str+" is Palindrome String");
+		}
+	
+		else
+		{
+			System.out.println(org_str+" is not a Palindrome String");
+		}
+}
+}
 --------------------------------------------------------------------------------------
 19.How to Swap two Strings without using third (temporary) variable? 
 
