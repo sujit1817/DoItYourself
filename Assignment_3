@@ -176,7 +176,7 @@ A class which is declared as abstract is known as an abstract class. It can have
 
 -------------------------------------------------------------------------------------------
 25 . What is a constructor?
-
+A constructor in Java is a special method that is used to initialize objects. The constructor is called when an object of a class is created.
 -------------------------------------------------------------------------------------------
 26 . What is a default constructor?
 
