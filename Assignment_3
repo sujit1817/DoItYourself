@@ -135,35 +135,52 @@ If subclass (child class) has the same method as declared in the parent class, i
 3.There must be an IS-A relationship (inheritance).
 -------------------------------------------------------------------------------------------
 13 . Can super class reference variable can hold an object of sub class?
+Yes, the super class reference variable can hold the sub class object actually, it is widening in case of objects (Conversion of lower datatype to a higher datatype)
 
 -------------------------------------------------------------------------------------------
 14 . Is multiple inheritance allowed in Java?
-
+When the child class extends from more than one superclass, it is known as multiple inheritance. However, Java does not support multiple inheritance. To achieve multiple inheritance in Java, we must use the interface.
 -------------------------------------------------------------------------------------------
 15 . What is an interface?
-
+An interface in Java is a blueprint of a class. It has static constants and abstract methods. 
+The interface in Java is a mechanism to achieve abstraction. There can be only abstract methods in the Java interface, not method body. It is used to achieve abstraction and multiple inheritance in Java.
 -------------------------------------------------------------------------------------------
 16 . How do you define an interface?
-
+An Interface in Java programming language is defined as an 'abstract type' used to specify the 'behavior' of a class.
+The interface in Java is a mechanism to achieve abstraction.
 -------------------------------------------------------------------------------------------
 17 . How do you implement an interface?
-
+An interface is declared by using the interface keyword. to implement an interface we write implements.
+a class extends another class, an interface extends another interface, but a class implements an interface.
 -------------------------------------------------------------------------------------------
 18 . Can you explain a few tricky things about interfaces?
 
 -------------------------------------------------------------------------------------------
 19 . Can you extend an interface?
-
+it is implented not extended
 -------------------------------------------------------------------------------------------
 20 . Can a class extend multiple interfaces?
-
+Yes, it is possible. This is the catch: java does not support multiple inheritance, i.e. class cannot extend more than one class. However class can implement multiple interfaces.
 -------------------------------------------------------------------------------------------
 21 . What is an abstract class?
+A class which is declared as abstract is known as an abstract class. It can have abstract and non-abstract methods. It needs to be extended and its method implemented. It cannot be instantiated(its object cannot be created).
+
+-------------------------------------------------------------------------------------------
 22 . When do you use an abstract class?
+
+-------------------------------------------------------------------------------------------
 23 . How do you define an abstract method?
+
+-------------------------------------------------------------------------------------------
 24 . Compare abstract class vs interface?
+
+-------------------------------------------------------------------------------------------
 25 . What is a constructor?
+
+-------------------------------------------------------------------------------------------
 26 . What is a default constructor?
+
+-------------------------------------------------------------------------------------------
 27 . Will this code compile?
 28 . How do you call a super class constructor from a constructor?
 29 . Will this code compile?
