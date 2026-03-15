@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kafka Code Explained</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #161d2e;
+    --border: #1e2d45;
+    --producer: #f59e0b;
+    --consumer: #10b981;
+    --kafka: #6366f1;
+    --config: #ec4899;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #0d1117;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .header .badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.4);
+    color: #818cf8;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #e2e8f0 0%, #6366f1 50%, #f59e0b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  /* Architecture Flow */
+  .flow-section {
+    margin-bottom: 60px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .flow-diagram {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+  .flow-diagram::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .flow-box {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 24px 28px;
+    text-align: center;
+    min-width: 160px;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+  .flow-box:hover { transform: translateY(-4px); }
+
+  .flow-box.producer { border: 2px solid var(--producer); box-shadow: 0 0 30px rgba(245,158,11,0.1); }
+  .flow-box.producer:hover { box-shadow: 0 8px 40px rgba(245,158,11,0.25); }
+
+  .flow-box.kafka-broker { border: 2px solid var(--kafka); box-shadow: 0 0 30px rgba(99,102,241,0.1); min-width: 200px; }
+  .flow-box.kafka-broker:hover { box-shadow: 0 8px 40px rgba(99,102,241,0.25); }
+
+  .flow-box.consumer { border: 2px solid var(--consumer); box-shadow: 0 0 30px rgba(16,185,129,0.1); }
+  .flow-box.consumer:hover { box-shadow: 0 8px 40px rgba(16,185,129,0.25); }
+
+  .flow-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+  .flow-name { font-weight: 700; font-size: 13px; letter-spacing: 0.5px; }
+  .flow-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  .arrow-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 12px;
+    gap: 4px;
+  }
+  .arrow-line {
+    width: 80px;
+    height: 2px;
+    position: relative;
+    overflow: visible;
+  }
+  .arrow-track {
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    position: relative;
+  }
+  .arrow-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: -4px;
+    animation: slideDot 2s linear infinite;
+  }
+  .arrow-dot.send { background: var(--producer); }
+  .arrow-dot.recv { background: var(--consumer); }
+  @keyframes slideDot {
+    0% { left: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% - 10px); opacity: 0; }
+  }
+  .arrow-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  /* Topic pill inside kafka box */
+  .topic-pill {
+    display: inline-block;
+    background: rgba(99,102,241,0.2);
+    border: 1px solid rgba(99,102,241,0.4);
+    color: #a5b4fc;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Code Breakdown Grid */
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 60px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+  @media (max-width: 768px) { .breakdown-grid { grid-template-columns: 1fr; } }
+
+  .code-card {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .code-card:hover { transform: translateY(-2px); }
+
+  .code-card.full-width { grid-column: 1 / -1; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-header .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .card-title { font-weight: 700; font-size: 14px; letter-spacing: 0.3px; }
+  .card-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-left: auto; }
+
+  .card-body { padding: 0; }
+
+  /* Annotated code block */
+  .code-lines { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1; }
+
+  .code-line {
+    display: flex;
+    align-items: stretch;
+    transition: background 0.2s;
+  }
+  .code-line:hover { background: rgba(255,255,255,0.03); }
+  .code-line:hover .annotation { opacity: 1; max-height: 80px; padding: 6px 16px; }
+
+  .line-num {
+    min-width: 36px;
+    padding: 7px 8px;
+    text-align: right;
+    color: #2d3748;
+    font-size: 11px;
+    user-select: none;
+    background: var(--code-bg);
+    border-right: 1px solid #1a2035;
+    flex-shrink: 0;
+  }
+
+  .line-content {
+    padding: 7px 14px;
+    background: var(--code-bg);
+    flex: 1;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .annotation {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.25s ease;
+    background: rgba(99,102,241,0.07);
+    border-left: 2px solid rgba(99,102,241,0.4);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.5;
+    padding: 0 16px;
+    grid-column: 2;
+  }
+
+  .annotation-row {
+    background: rgba(99,102,241,0.04);
+    border-bottom: 1px solid rgba(99,102,241,0.08);
+  }
+  .annotation-row .line-num { background: rgba(99,102,241,0.06); }
+  .annotation-row .line-content { background: transparent; font-style: italic; color: #94a3b8; }
+
+  /* Syntax colors */
+  .kw { color: #c084fc; }
+  .cl { color: #67e8f9; }
+  .fn { color: #fbbf24; }
+  .st { color: #86efac; }
+  .an { color: #fb923c; }
+  .cm { color: #475569; font-style: italic; }
+  .nu { color: #f472b6; }
+  .va { color: #e2e8f0; }
+
+  /* Real world example */
+  .example-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 60px;
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+
+  .example-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #f59e0b;
+  }
+  .example-desc { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--producer), var(--kafka), var(--consumer));
+    border-radius: 2px;
+  }
+
+  .timeline-step {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 0 0 28px 0;
+    animation: fadeRight 0.5s ease both;
+  }
+  .timeline-step:nth-child(1) { animation-delay: 0.7s; }
+  .timeline-step:nth-child(2) { animation-delay: 0.85s; }
+  .timeline-step:nth-child(3) { animation-delay: 1.0s; }
+  .timeline-step:nth-child(4) { animation-delay: 1.15s; }
+  .timeline-step:nth-child(5) { animation-delay: 1.3s; }
+
+  .step-dot {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .step-dot.p { background: rgba(245,158,11,0.15); border: 2px solid var(--producer); }
+  .step-dot.k { background: rgba(99,102,241,0.15); border: 2px solid var(--kafka); }
+  .step-dot.c { background: rgba(16,185,129,0.15); border: 2px solid var(--consumer); }
+
+  .step-content { flex: 1; padding-top: 8px; }
+  .step-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .step-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .step-code {
+    display: inline-block;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #fbbf24;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin: 2px 2px;
+  }
+
+  /* Key concepts */
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 60px;
+    animation: fadeUp 0.8s ease 0.8s both;
+  }
+
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .concept-card:hover { transform: translateY(-3px); border-color: rgba(99,102,241,0.4); }
+
+  .concept-icon { font-size: 24px; margin-bottom: 10px; }
+  .concept-term { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .concept-def { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* What happens if kafka is down */
+  .warning-box {
+    background: rgba(239,68,68,0.05);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    animation: fadeUp 0.8s ease 1s both;
+  }
+  .warning-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .warning-title { font-weight: 700; font-size: 14px; color: #f87171; margin-bottom: 4px; }
+  .warning-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* Keyframes */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeRight {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Tooltip hover instruction */
+  .hover-hint {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    padding-right: 4px;
+  }
+  .hover-hint span { color: var(--kafka); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">Spring Boot + Apache Kafka</div>
+    <h1>Order Events Pipeline</h1>
+    <p>A visual deep-dive into every line of Kafka producer & consumer code</p>
+  </div>
+
+  <!-- Architecture Flow -->
+  <div class="flow-section">
+    <div class="section-label">▸ System Architecture</div>
+    <div class="flow-diagram">
+      <!-- Producer -->
+      <div class="flow-box producer">
+        <span class="flow-icon">🛒</span>
+        <div class="flow-name" style="color:var(--producer)">OrderService</div>
+        <div class="flow-sub">Producer</div>
+        <div class="flow-sub" style="margin-top:6px">Creates order → sends event</div>
+      </div>
+
+      <!-- Arrow 1 -->
+      <div class="arrow-wrapper">
+        <div class="arrow-label">PUBLISH</div>
+        <div class="arrow-line">
+          <div class="arrow-track">
+            <div class="arrow-dot send" style="animation-delay:0s"></div>
+          </div>
+        </div>
+        <div class="arrow-label" style="color:var(--producer)">OrderCreatedEvent</div>
+      </div>
+
+      <!-- Kafka Broker -->
+      <div class="flow-box kafka-broker">
+        <span class="flow-icon">⚡</span>
+        <div class="flow-name" style="color:var(--kafka)">Kafka Broker</div>
+        <div class="flow-sub">localhost:9092</div>
+        <div class="topic-pill">"order-events" topic</div>
+        <div class="topic-pill" style="margin-top:4px;background:rgba(99,102,241,0.1);color:#6366f1">key: order.getId()</div>
+      </div>
+
+      <!-- Arrow 2 -->
+      <div class="arrow-wrapper">
+        <div class="arrow-label">CONSUME</div>
+        <div class="arrow-line">
+          <div class="arrow-track">
+            <div class="arrow-dot recv" style="animation-delay:1s"></div>
+          </div>
+        </div>
+        <div class="arrow-label" style="color:var(--consumer)">@KafkaListener</div>
+      </div>
+
+      <!-- Consumer -->
+      <div class="flow-box consumer">
+        <span class="flow-icon">📧</span>
+        <div class="flow-name" style="color:var(--consumer)">EmailService</div>
+        <div class="flow-sub">Consumer</div>
+        <div class="flow-sub" style="margin-top:6px">group: email-service</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE CARDS -->
+  <div class="section-label">▸ Code Breakdown — hover any line to see explanation</div>
+
+  <div class="breakdown-grid">
+
+    <!-- Producer Card -->
+    <div class="code-card">
+      <div class="card-header">
+        <div class="dot" style="background:var(--producer)"></div>
+        <span class="card-title" style="color:var(--producer)">OrderService.java</span>
+        <span class="card-subtitle">PRODUCER</span>
+      </div>
+      <div class="card-body">
+        <div class="hover-hint"><span>hover</span> a line to explain it</div>
+        <div class="code-lines">
+
+          <div class="code-line" title="">
+            <span class="line-num">1</span>
+            <span class="line-content"><span class="an">@Service</span></span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📌 Registers this class as a Spring-managed bean — Spring will create & manage its lifecycle</span></div>
+
+          <div class="code-line">
+            <span class="line-num">2</span>
+            <span class="line-content"><span class="kw">public class</span> <span class="cl">OrderService</span> {</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📦 The main service class for order operations (the Kafka PRODUCER side)</span></div>
+
+          <div class="code-line">
+            <span class="line-num">3</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">4</span>
+            <span class="line-content">    <span class="an">@Autowired</span></span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">💉 Dependency Injection — Spring automatically injects a KafkaTemplate instance here</span></div>
+
+          <div class="code-line">
+            <span class="line-num">5</span>
+            <span class="line-content">    <span class="kw">private</span> <span class="cl">KafkaTemplate</span>&lt;<span class="cl">String</span>, <span class="cl">OrderCreatedEvent</span>&gt; <span class="va">kafkaTemplate</span>;</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🚀 KafkaTemplate is Spring's helper to SEND messages. &lt;String, OrderCreatedEvent&gt; = key type, value type</span></div>
+
+          <div class="code-line">
+            <span class="line-num">6</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">7</span>
+            <span class="line-content">    <span class="kw">public</span> <span class="cl">Order</span> <span class="fn">createOrder</span>(<span class="cl">OrderRequest</span> <span class="va">request</span>) {</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🔧 Public method called when a new order is placed. Takes incoming request data as parameter</span></div>
+
+          <div class="code-line">
+            <span class="line-num">8</span>
+            <span class="line-content">        <span class="cl">Order</span> <span class="va">order</span> = <span class="fn">saveOrder</span>(<span class="va">request</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">💾 FIRST: persist the order to database. Always save to DB before publishing events!</span></div>
+
+          <div class="code-line">
+            <span class="line-num">9</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">10</span>
+            <span class="line-content">        <span class="cl">OrderCreatedEvent</span> <span class="va">event</span> = <span class="kw">new</span> <span class="cl">OrderCreatedEvent</span>(<span class="va">order</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📨 Create an EVENT object. This is what gets serialized to JSON and sent to Kafka</span></div>
+
+          <div class="code-line">
+            <span class="line-num">11</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">12</span>
+            <span class="line-content">        <span class="va">kafkaTemplate</span>.<span class="fn">send</span>(</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📤 The actual SEND call — this publishes the message to Kafka broker asynchronously</span></div>
+
+          <div class="code-line">
+            <span class="line-num">13</span>
+            <span class="line-content">            <span class="st">"order-events"</span>,</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📋 TOPIC NAME: the Kafka topic channel to publish to. Like a mailbox name.</span></div>
+
+          <div class="code-line">
+            <span class="line-num">14</span>
+            <span class="line-content">            <span class="va">order</span>.<span class="fn">getId</span>().<span class="fn">toString</span>(),</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🔑 MESSAGE KEY: same key = same partition = guaranteed ordering for that order's events</span></div>
+
+          <div class="code-line">
+            <span class="line-num">15</span>
+            <span class="line-content">            <span class="va">event</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📦 MESSAGE VALUE: the OrderCreatedEvent object (gets JSON-serialized automatically)</span></div>
+
+          <div class="code-line">
+            <span class="line-num">16</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">17</span>
+            <span class="line-content">        <span class="kw">return</span> <span class="va">order</span>;</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">↩️ Return saved order to caller. Note: we don't wait for Kafka ACK — fire and forget!</span></div>
+
+          <div class="code-line">
+            <span class="line-num">18</span>
+            <span class="line-content">    }</span>
+          </div>
+          <div class="code-line">
+            <span class="line-num">19</span>
+            <span class="line-content">}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Consumer Card -->
+    <div class="code-card">
+      <div class="card-header">
+        <div class="dot" style="background:var(--consumer)"></div>
+        <span class="card-title" style="color:var(--consumer)">EmailService.java</span>
+        <span class="card-subtitle">CONSUMER</span>
+      </div>
+      <div class="card-body">
+        <div class="hover-hint"><span>hover</span> a line to explain it</div>
+        <div class="code-lines">
+
+          <div class="code-line">
+            <span class="line-num">1</span>
+            <span class="line-content"><span class="an">@Service</span></span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📌 Spring bean — the email service is auto-managed and auto-started by Spring</span></div>
+
+          <div class="code-line">
+            <span class="line-num">2</span>
+            <span class="line-content"><span class="kw">public class</span> <span class="cl">EmailService</span> {</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📧 Separate service for email logic. Kafka decouples this from OrderService entirely</span></div>
+
+          <div class="code-line">
+            <span class="line-num">3</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">4</span>
+            <span class="line-content">    <span class="an">@KafkaListener</span>(</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">👂 Magic annotation — tells Spring to make this method LISTEN for Kafka messages continuously</span></div>
+
+          <div class="code-line">
+            <span class="line-num">5</span>
+            <span class="line-content">        <span class="va">topics</span> = <span class="st">"order-events"</span>,</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📋 WHICH TOPIC to listen to — must match exactly what the producer sends to!</span></div>
+
+          <div class="code-line">
+            <span class="line-num">6</span>
+            <span class="line-content">        <span class="va">groupId</span> = <span class="st">"email-service"</span>)</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">👥 CONSUMER GROUP: Kafka tracks offset (position) per group. Different groups = independent reads. Multiple instances of EmailService share this group = load balanced</span></div>
+
+          <div class="code-line">
+            <span class="line-num">7</span>
+            <span class="line-content">    <span class="kw">public void</span> <span class="fn">handleOrderCreated</span>(</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🎯 This method is CALLED AUTOMATICALLY each time a new message arrives in the topic</span></div>
+
+          <div class="code-line">
+            <span class="line-num">8</span>
+            <span class="line-content">            <span class="cl">OrderCreatedEvent</span> <span class="va">event</span>) {</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🔄 Spring auto-DESERIALIZES the JSON from Kafka back into an OrderCreatedEvent object</span></div>
+
+          <div class="code-line">
+            <span class="line-num">9</span>
+            <span class="line-content"></span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">10</span>
+            <span class="line-content">        <span class="fn">sendOrderConfirmation</span>(<span class="va">event</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📬 Sends the confirmation email using the order data. Runs in its own thread pool — doesn't block OrderService!</span></div>
+
+          <div class="code-line">
+            <span class="line-num">11</span>
+            <span class="line-content">    }</span>
+          </div>
+          <div class="code-line">
+            <span class="line-num">12</span>
+            <span class="line-content">}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Config Card Full Width -->
+    <div class="code-card full-width">
+      <div class="card-header">
+        <div class="dot" style="background:var(--config)"></div>
+        <span class="card-title" style="color:var(--config)">KafkaConfig.java</span>
+        <span class="card-subtitle">CONFIGURATION</span>
+      </div>
+      <div class="card-body">
+        <div class="hover-hint"><span>hover</span> a line to explain it</div>
+        <div class="code-lines">
+
+          <div class="code-line">
+            <span class="line-num">1</span>
+            <span class="line-content"><span class="an">@Configuration</span></span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">⚙️ Marks this as a Spring Configuration class — Spring scans it for @Bean definitions at startup</span></div>
+
+          <div class="code-line">
+            <span class="line-num">2</span>
+            <span class="line-content"><span class="kw">public class</span> <span class="cl">KafkaConfig</span> {</span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">3</span>
+            <span class="line-content">    <span class="an">@Bean</span></span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🫘 @Bean = Spring will call this method once and store the result as a singleton in its context</span></div>
+
+          <div class="code-line">
+            <span class="line-num">4</span>
+            <span class="line-content">    <span class="kw">public</span> <span class="cl">ProducerFactory</span>&lt;<span class="cl">String</span>, <span class="cl">OrderCreatedEvent</span>&gt; <span class="fn">producerFactory</span>() {</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🏭 ProducerFactory creates Kafka producer instances. &lt;String, OrderCreatedEvent&gt; = key, value types</span></div>
+
+          <div class="code-line">
+            <span class="line-num">5</span>
+            <span class="line-content">        <span class="cl">Map</span>&lt;<span class="cl">String</span>, <span class="cl">Object</span>&gt; <span class="va">config</span> = <span class="kw">new</span> <span class="cl">HashMap</span>&lt;&gt;();</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🗺️ A plain Java Map to hold all Kafka producer properties before passing them in</span></div>
+
+          <div class="code-line">
+            <span class="line-num">6</span>
+            <span class="line-content">        <span class="va">config</span>.<span class="fn">put</span>(<span class="cl">ProducerConfig</span>.<span class="va">BOOTSTRAP_SERVERS_CONFIG</span>, <span class="st">"localhost:9092"</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🌐 BROKER ADDRESS — tells the producer where Kafka is running. In production this would be like "kafka1:9092,kafka2:9092"</span></div>
+
+          <div class="code-line">
+            <span class="line-num">7</span>
+            <span class="line-content">        <span class="va">config</span>.<span class="fn">put</span>(<span class="cl">ProducerConfig</span>.<span class="va">KEY_SERIALIZER_CLASS_CONFIG</span>, <span class="cl">StringSerializer</span>.<span class="kw">class</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🔤 KEY SERIALIZER: converts the String key (order ID) to bytes for Kafka network transport</span></div>
+
+          <div class="code-line">
+            <span class="line-num">8</span>
+            <span class="line-content">        <span class="va">config</span>.<span class="fn">put</span>(<span class="cl">ProducerConfig</span>.<span class="va">VALUE_SERIALIZER_CLASS_CONFIG</span>, <span class="cl">JsonSerializer</span>.<span class="kw">class</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📄 VALUE SERIALIZER: converts OrderCreatedEvent Java object → JSON string → bytes. Consumer will do the reverse</span></div>
+
+          <div class="code-line">
+            <span class="line-num">9</span>
+            <span class="line-content">        <span class="kw">return new</span> <span class="cl">DefaultKafkaProducerFactory</span>&lt;&gt;(<span class="va">config</span>);</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">✅ Build and return the factory using our config. Spring will use this to create the KafkaTemplate</span></div>
+
+          <div class="code-line">
+            <span class="line-num">10</span>
+            <span class="line-content">    }</span>
+          </div>
+
+          <div class="code-line">
+            <span class="line-num">11</span>
+            <span class="line-content">    <span class="an">@Bean</span></span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🫘 Second bean — this is what gets @Autowired into OrderService above</span></div>
+
+          <div class="code-line">
+            <span class="line-num">12</span>
+            <span class="line-content">    <span class="kw">public</span> <span class="cl">KafkaTemplate</span>&lt;<span class="cl">String</span>, <span class="cl">OrderCreatedEvent</span>&gt; <span class="fn">kafkaTemplate</span>() {</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">📡 KafkaTemplate is the high-level API for sending messages — wraps ProducerFactory internally</span></div>
+
+          <div class="code-line">
+            <span class="line-num">13</span>
+            <span class="line-content">        <span class="kw">return new</span> <span class="cl">KafkaTemplate</span>&lt;&gt;(<span class="fn">producerFactory</span>());</span>
+          </div>
+          <div class="annotation-row"><span class="line-num"></span><span class="line-content">🔗 Wires KafkaTemplate to the ProducerFactory we just defined above — connects config → sender</span></div>
+
+          <div class="code-line">
+            <span class="line-num">14</span>
+            <span class="line-content">    }</span>
+          </div>
+          <div class="code-line">
+            <span class="line-num">15</span>
+            <span class="line-content">}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real World Example -->
+  <div class="example-section">
+    <div class="example-title">🛒 Real World Walkthrough</div>
+    <div class="example-desc">User places Order #4521 on your e-commerce site — here's exactly what happens, step by step</div>
+
+    <div class="timeline">
+
+      <div class="timeline-step">
+        <div class="step-dot p">🧑</div>
+        <div class="step-content">
+          <div class="step-title" style="color:var(--producer)">Step 1 — User hits the API</div>
+          <div class="step-body">
+            <span class="step-code">POST /orders</span> is called with
+            <span class="step-code">{ item: "MacBook", qty: 1 }</span><br>
+            This triggers <span class="step-code">OrderService.createOrder(request)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-step">
+        <div class="step-dot p">💾</div>
+        <div class="step-content">
+          <div class="step-title" style="color:var(--producer)">Step 2 — Order saved to DB</div>
+          <div class="step-body">
+            <span class="step-code">saveOrder(request)</span> persists the order. Database gives back
+            <span class="step-code">Order { id: 4521, status: PENDING }</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-step">
+        <div class="step-dot p">📨</div>
+        <div class="step-content">
+          <div class="step-title" style="color:var(--producer)">Step 3 — Event created & published</div>
+          <div class="step-body">
+            <span class="step-code">new OrderCreatedEvent(order)</span> creates the event payload.<br>
+            <span class="step-code">kafkaTemplate.send("order-events", "4521", event)</span> publishes JSON to Kafka topic.
+            Kafka stores it in <span class="step-code">partition determined by key "4521"</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-step">
+        <div class="step-dot k">⚡</div>
+        <div class="step-content">
+          <div class="step-title" style="color:var(--kafka)">Step 4 — Kafka stores the message</div>
+          <div class="step-body">
+            Kafka logs: <span class="step-code">{ "orderId": 4521, "item": "MacBook", "total": 1299, "userId": "u99" }</span>
+            to the <span class="step-code">order-events</span> topic. OrderService returns immediately — no waiting!
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-step">
+        <div class="step-dot c">📧</div>
+        <div class="step-content">
+          <div class="step-title" style="color:var(--consumer)">Step 5 — EmailService receives & acts</div>
+          <div class="step-body">
+            <span class="step-code">handleOrderCreated(event)</span> fires automatically in EmailService.
+            <span class="step-code">sendOrderConfirmation(event)</span> emails the customer: <span class="step-code">"Your order #4521 is confirmed! 🎉"</span><br>
+            Kafka marks the offset as consumed for group <span class="step-code">email-service</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Key Concepts -->
+  <div class="section-label">▸ Key Concepts at a Glance</div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">📋</div>
+      <div class="concept-term">Topic</div>
+      <div class="concept-def">A named channel in Kafka. Like a radio station — producers broadcast, consumers tune in. Here: <strong>"order-events"</strong></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🔑</div>
+      <div class="concept-term">Message Key</div>
+      <div class="concept-def">Determines which partition the message lands in. Same key = same partition = <strong>ordered delivery</strong> for that order.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">👥</div>
+      <div class="concept-term">Consumer Group</div>
+      <div class="concept-def"><strong>"email-service"</strong> group. Run 3 EmailService instances? Each handles different partitions — automatic load balancing.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🔄</div>
+      <div class="concept-term">Serializer</div>
+      <div class="concept-def">Converts Java objects ↔ bytes for network transport. Producer uses <strong>JsonSerializer</strong>, consumer deserializes back to the class.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🏭</div>
+      <div class="concept-term">ProducerFactory</div>
+      <div class="concept-def">Creates Kafka producer instances with your config. <strong>KafkaTemplate</strong> wraps this and gives you the clean .send() API.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">⚡</div>
+      <div class="concept-term">Async / Decoupled</div>
+      <div class="concept-def">OrderService doesn't wait for email to send. They're <strong>completely independent</strong> — EmailService can be down and orders still work.</div>
+    </div>
+  </div>
+
+  <!-- Warning Box -->
+  <div class="warning-box">
+    <div class="warning-icon">⚠️</div>
+    <div>
+      <div class="warning-title">What if Kafka goes down?</div>
+      <div class="warning-body">
+        In this basic setup, if Kafka is unreachable when <code style="font-family:JetBrains Mono;font-size:11px;color:#fca5a5">kafkaTemplate.send()</code> is called, it throws an exception and the event is <strong>lost</strong>. Production systems add <strong>retries</strong> (<code style="font-family:JetBrains Mono;font-size:11px;color:#fca5a5">acks=all</code>, <code style="font-family:JetBrains Mono;font-size:11px;color:#fca5a5">retries=3</code>), an <strong>outbox pattern</strong> (save event to DB first, publish separately), and <strong>dead-letter topics</strong> for failed consumer messages.
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
