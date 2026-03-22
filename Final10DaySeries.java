@@ -29,3 +29,25 @@ public class Main
 		reverseString(str);
 	}
 }
+//synechron 
+//Given a list of Integers, find the maximum value element present in 
+//it using Stream functions
+import java.util.*;
+
+public class Main
+{
+	public static void main(String[] args) {
+	    List<Integer> list = Arrays.asList(5,2,8,1);
+	    int max = list.stream().max((a,b) -> a.compareTo(b)).get();
+	    //list.stream().max(Integer::compare).get();
+	    //get is used because max returns optional
+	    
+	    //or
+	    //list.stream().max(Integer::compareTo).orElse(0); 
+	    
+	    System.out.println("max: "+max);
+	    
+	    int min = list.stream().min((a, b) -> a.compareTo(b)).get();
+	    System.out.println("max: "+min);
+	}
+}
