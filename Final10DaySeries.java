@@ -51,3 +51,63 @@ public class Main
 	    System.out.println("max: "+min);
 	}
 }
+
+
+
+//Create singleton
+//Eager
+public class EagerSingleton{
+	
+	private static final EagerSingleton instance = new EagerSingleton();
+	
+	private EagerSingleton(){
+	}
+	
+	public static EagerSingleton getInstance(){
+		return instance;
+	}
+}
+
+public class LazySingleton{
+	private static LazySingleton instance;
+	
+	private LazySingleton(){
+		
+	}
+	
+	public static LazySingleton getInstance(){
+		if(instance==null){
+			 instance = new LazySingleton();
+		}
+		return instance;
+	}
+}
+public class ThreadSafeSingleton{
+	private static volatile ThreadSafeSingleton instance;
+	
+	private ThreadSafeSingleton(){}
+	
+	public static synchronized ThreadSafeSingleton getInstance() {
+        if (instance == null) {
+            instance = new ThreadSafeSingleton();
+        }
+        return instance;
+    }
+}
+public class DoubleCheckedLocking{
+	private static volatile DoubleCheckedLocking instance;
+	
+	private DoubleCheckedLocking(){}
+	
+	public static DoubleCheckedLocking getInstance() {
+        if (instance == null) {
+            synchronized (DoubleCheckedLocking.class) {
+                if (instance == null) {
+                    instance = new DoubleCheckedLocking();
+                }
+            }
+        }
+        return instance;
+    }
+}
+verify and tell if its correct?
