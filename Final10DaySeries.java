@@ -53,6 +53,10 @@ public class Main
 }
 
 
+//Singleton ensures that only one instance of a class is created and provides a global access point to that instance.
+//1. Logging
+//2. Configuration classes
+//3. Database connections
 
 //Create singleton
 //Eager
@@ -68,11 +72,11 @@ public class EagerSingleton{
 	}
 }
 
+//Lazy
 public class LazySingleton{
 	private static LazySingleton instance;
 	
-	private LazySingleton(){
-		
+	private LazySingleton(){		
 	}
 	
 	public static LazySingleton getInstance(){
@@ -82,6 +86,8 @@ public class LazySingleton{
 		return instance;
 	}
 }
+
+//Thread safe
 public class ThreadSafeSingleton{
 	private static volatile ThreadSafeSingleton instance;
 	
@@ -94,6 +100,8 @@ public class ThreadSafeSingleton{
         return instance;
     }
 }
+
+//Double checked
 public class DoubleCheckedLocking{
 	private static volatile DoubleCheckedLocking instance;
 	
@@ -110,4 +118,4 @@ public class DoubleCheckedLocking{
         return instance;
     }
 }
-verify and tell if its correct?
+
