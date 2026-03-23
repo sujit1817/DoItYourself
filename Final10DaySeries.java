@@ -119,3 +119,36 @@ public class DoubleCheckedLocking{
     }
 }
 
+//Remove Duplicates from Sorted Array : Use 2 Pointer 
+import java.util.*;
+public class Main {
+
+    public static void removeDuplicates(int[] nums) {
+        // Edge case
+        if (nums == null || nums.length == 0) {
+            System.out.println("empty array");
+        }
+
+       //
+       int i = 0;
+       for(int j = 1; j < nums.length; j++){
+           if(nums[i]!=nums[j]){
+               i++;
+               nums[i]=nums[j];
+           }
+           
+           
+       }
+       for(int k = 0; k<=i;k++){
+            System.out.print(" "+nums[k]);
+       }
+      // System.out.println("Unique count: " +Arrays.toString(nums));
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1, 1, 2, 2, 3};
+        removeDuplicates(nums);
+
+        
+    }
+}
