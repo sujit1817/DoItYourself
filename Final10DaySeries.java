@@ -152,3 +152,105 @@ public class Main {
         
     }
 }
+
+import java.util.*;
+
+public class Main
+{
+	public static void main(String[] args) {
+		Deque<Integer> deque = new LinkedList<>();
+		deque.addFirst(1);//[1]
+		deque.addFirst(2);//[2,1]
+		deque.addLast(3);//[2,1,3]
+		deque.addLast(4);//[2,1,3,4]
+		System.out.println(deque+" ");
+		
+		deque.removeFirst();// first element will be removed
+		System.out.println(deque+" ");
+		deque.removeLast();//Last element will be removed
+		
+		System.out.println(deque+" ");
+		
+		System.out.println("first el = "+deque.getFirst());
+		System.out.println("last el = "+deque.getLast());
+		
+	}
+}
+
+//Binary format of 4 + count number of zeroes
+import java.util.*;
+
+public class Main
+{
+	public static void main(String[] args) {
+	  int num = 4;
+	  String binary = Integer.toBinaryString(num);
+	  System.out.println("Binary: "+binary);
+	  
+	  int zeroCount = 0;
+	  int oneCount = 0;
+	  
+	  for(char c : binary.toCharArray()){
+	      if(c == '0'){
+	          zeroCount++;
+	      }else {
+	      oneCount++;
+	      }
+	  }
+	  
+	  System.out.println("zeroCount : "+zeroCount);
+	  System.out.println("oneCount : "+oneCount);
+	}
+}
+
+//Palindrome of Given String
+import java.util.*;
+
+public class Main
+{
+	public static void main(String[] args) {
+		String str = "madam";
+		String reversed = new StringBuilder(str).reverse().toString();
+
+		if(str.equals(reversed)) {
+			System.out.println("Palindrome");
+		} else {
+			System.out.println("not Palindrome");
+		}
+	}
+}
+
+//static and instance counter
+//static class level
+//instance - per object level
+//instance in heap
+//static in method area
+import java.util.*;
+
+public class Main
+{
+	int instanceCounter = 0; //per Object
+	static int staticCount = 0; //shared across all Objects
+
+	Main() {
+	//	instanceCounter++;
+		staticCount++;
+	}
+	
+	public static int getCount(){
+	    return staticCount;
+	}
+	
+	public int getInstanceCount(){
+	    return instanceCounter;
+	}
+	
+	public static void main(String[] args) {
+		new Main();
+		new Main();
+    Main m = new Main();
+
+    System.out.println(getCount()); 
+    System.out.println(m.getInstanceCount()); 
+	}
+}
