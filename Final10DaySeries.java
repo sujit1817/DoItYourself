@@ -153,6 +153,8 @@ public class Main {
     }
 }
 
+
+//deque implementation
 import java.util.*;
 
 public class Main
@@ -254,3 +256,75 @@ public class Main
     System.out.println(m.getInstanceCount()); 
 	}
 }
+
+
+
+//singly : last node
+class Node{
+	int data;
+	Node next = null;
+}
+
+
+//Circular : last node points back to head
+Node head = new Node(1);
+Node second = new Node(2);
+head.next = second;
+second.next = head;//circular
+
+
+nth highest sal
+
+select salary 
+from (
+select salary,
+		  DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk
+	FROM employees
+	) ranked
+where rnk = N; --replace N with desired rank (2, 3, etc.)
+
+//Check if array is sorted (no inbuilt functions)
+import java.util.*;
+
+public class Main
+{
+	public static boolean isSorted(int[] arr) {
+		if(arr == null || arr.length <= 1) {
+			return true;
+		}
+		for(int i = 0; i<arr.length-1; i++) {
+			if(arr[i]>arr[i+1]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static void main(String[] args) {
+		int[] a = {1, 3, 5, 7};    // isSorted  true
+		int[] b = {1, 5, 3, 7};    // isSorted  false
+		System.out.println(isSorted(a));
+		System.out.println(isSorted(b));
+	}
+}
+
+
+write a java program that takes list of integers as input and returns the squares of all the odd numbers in the list using stream api
+import java.util.Arrays;
+import java.util.List;
+
+public class OddSquares {
+    public static void main(String[] args) {
+        
+        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+
+        nums.stream()
+            .filter(n -> n % 2 != 0)   // filter odd numbers
+            .map(n -> n * n)           // square them
+            .forEach(System.out::println); // print result
+    }
+}
+nums.stream().filter(n -> n%2!=0).map(n -> n*n).forEach(System.out::println);
+
+
+
