@@ -379,4 +379,29 @@ JVM Heap Memory Flags: -Xmx110000m -Xms2048m
 What These Flags Mean
 FlagFull Form Value Meaning -Xms2048m Xmemory start 2048 MB = 2 GB Initial heap size when JVM starts-Xmx110000m Xmemory max110000 MB ≈ 107 GB Maximum heap size JVM can grow to
 
+JVM Starts
+    └─ Heap allocated = 2 GB  (-Xms2048m)
+           │
+           │  (app runs, creates objects, heap fills up)
+           │
+           ▼
+    JVM requests more memory from OS
+           │
+           │  (keeps growing as needed)
+           │
+           ▼
+    Maximum heap = ~107 GB  (-Xmx110000m)
+           │
+           ▼
+    If exceeded → OutOfMemoryError: Java heap space
 
+# ❌ Bad — large gap causes heap resizing overhead
+-Xms2048m -Xmx110000m
+
+# ✅ Good — fixed heap, no resizing at runtime
+-Xms110000m -Xmx110000m
+
+# Or use reasonable values based on server RAM
+-Xms4g -Xmx4g      # 4 GB server
+-Xms8g -Xmx8g      # 8 GB server
+-Xms16g -Xmx16g    # 16 GB server
