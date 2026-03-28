@@ -330,8 +330,8 @@ nums.stream().filter(n -> n%2!=0).map(n -> n*n).forEach(System.out::println);
 //first non repeating char
 import java.util.*;
 import java.util.stream.*;
-/*
-public class Main {
+
+public class FirstNonRepeatingCharms {
     public static void main(String[] args) {
         String str = "character";
 
@@ -350,10 +350,10 @@ public class Main {
         }
     }
 }
-*/
 
-
-public class Main {
+import java.util.*;
+import java.util.stream.*;
+public class FirstNonRepeatingCharStreams {
     public static void main(String[] args) {
         String str = "character";
 
@@ -373,3 +373,10 @@ public class Main {
             System.out.println(ch);
     }
 }
+
+JVM Heap Memory Flags: -Xmx110000m -Xms2048m
+
+What These Flags Mean
+FlagFull Form Value Meaning -Xms2048m Xmemory start 2048 MB = 2 GB Initial heap size when JVM starts-Xmx110000m Xmemory max110000 MB ≈ 107 GB Maximum heap size JVM can grow to
+
+
