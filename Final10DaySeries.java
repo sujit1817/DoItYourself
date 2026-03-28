@@ -326,5 +326,50 @@ public class OddSquares {
 }
 nums.stream().filter(n -> n%2!=0).map(n -> n*n).forEach(System.out::println);
 
+/*Zemoso*/
+//first non repeating char
+import java.util.*;
+import java.util.stream.*;
+/*
+public class Main {
+    public static void main(String[] args) {
+        String str = "character";
+
+        Map<Character, Long> result = str.chars() //instream  need to convert to obj
+            .mapToObj(c -> (char)c)
+            .collect(Collectors.groupingBy(c -> c, LinkedHashMap::new, Collectors.counting()));
+            
+            System.out.println(result);
+            //.stream().filter(c -> )
+        
+        for(Map.Entry<Character, Long> zemo : result.entrySet()){
+            if(zemo.getValue() == 1){
+                System.out.print(zemo.getKey());
+                break;
+            }
+        }
+    }
+}
+*/
 
 
+public class Main {
+    public static void main(String[] args) {
+        String str = "character";
+
+        //Map<Character, Long> result =
+        char ch =
+        str.chars() //instream  need to convert to obj
+            .mapToObj(c -> (char)c)
+            .collect(Collectors.groupingBy(
+                c -> c, 
+                LinkedHashMap::new, 
+                Collectors.counting()))
+            .entrySet()
+            .stream()
+            .filter(e -> e.getValue() == 1)
+            .map(Map.Entry::getKey)
+            .findFirst().get();
+            System.out.println(ch);
+    }
+}
