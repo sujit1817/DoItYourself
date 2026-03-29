@@ -405,3 +405,57 @@ JVM Starts
 -Xms4g -Xmx4g      # 4 GB server
 -Xms8g -Xmx8g      # 8 GB server
 -Xms16g -Xmx16g    # 16 GB server
+
+
+
+	
+@Service
+public class OrderService {
+	//producer side
+
+	@Autowired
+	private KafkaTemplate<String, OrderCreatedEvent> kafkatemplate;
+
+	public Order createOrder(OrderRequest request) {
+		Order order = saveOrder(request);
+		OrderCreatedEvent event = new OrderCreatedEvent(order);
+		kafkatemplate.send(
+		    "order-event"//topic name
+		    ,order.getId().toString() //message key : same key same partition
+		    ,event)//message value : OrderCreatedEvent Object
+
+		return order;
+	}
+
+}
+
+
+@Service
+//consure
+public class EmailService {
+	@KafkaListner(topic = "order-events",
+	              groupId = "email-service")
+	public void handleOrderCreated(OrderCreatedEvent event) {
+		sendOrderConfirmattion(event);
+	}
+}
+
+@Configuration
+public class KafkaConfig {
+	@Bean
+	public ProduceFactory<String, OrderCreatedEvent> produceFactory() {
+		Map<String, Object> config = new HashMap<>();
+		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+		return new DefaultKafkaProducerFactory<>(config);
+	}
+
+	@Bean
+	public KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate() {
+		return new KafkaTemplate<>(producerFactory());
+	}
+}
+
+
