@@ -458,4 +458,63 @@ public class KafkaConfig {
 	}
 }
 
+Java Streams:
+1. Sum of even numbers
+Given a list of integers, return the sum of all even numbers using streams.
+Given
+List nums = List.of(1, 2, 3, 4, 5, 6, 7, 8);
+
+nums.stream().filter(n -> n%2==0).reduce((a,b) -> a+b).orElse(0);
+nums.stream().filter(n -> n % 2 == 0).reduce(0, (a, b) -> a+b);
+nums.stream().filter(n -> n % 2 == 0).mapToInt(Integer::intValue).sum();
+
+2. List of uppercase strings
+Convert all strings in a list to uppercase and collect them into a new list.
+Given
+List words = List.of("hello", "world", "java");
+
+words.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+3. Count strings longer than 3 chars
+Count how many strings in a list have more than 3 characters.
+Given
+List words = List.of("hi", "java", "ok", "streams", "is");
+long count = words.stream()
+                  .filter(s -> s.length() > 3)
+                  .count();
+
+4. Find first name starting with 'A'
+Return the first name in the list that starts with the letter 'A', or empty if none.
+Given
+List names = List.of("Bob", "Alice", "Anna", "Charlie");
+Optional<String> result = names.stream().filter(s -> s.charAt(0)=='A').findFirst();
+
+5. Flatten a list of lists
+Flatten a List> into a single List using streams.
+Given
+List> nested = List.of(
+List.of(1, 2), List.of(3, 4), List.of(5));
+nested.stream().flatMap(List::stream).collect(Collectors.toList());
+
+6.Group words by their length
+Group a list of strings by their character length into a Map>.
+Given
+List words = List.of("hi", "hey", "yo", "java", "bye");
+words.stream().collect(Collectors.groupingBy(s -> s.length()))
+
+7. Get distinct sorted numbers
+From a list with duplicates, return a sorted list of distinct numbers.
+Given
+List nums = List.of(3, 1, 4, 1, 5, 9, 2, 6, 5, 3);
+nums.stream().distinct().sorted().forEach(System.out::println);
+
+8. Max salary from employee list
+Find the employee with the highest salary. Return an Optional.
+Given
+record Employee(String name, int salary) {}
+List emps = List.of(
+    new Employee("Ana", 70000),
+    new Employee("Bob", 95000),
+    new Employee("Cara", 80000));
+Optional<Employee> maxEmp = emps.stream().max(Comparator.comparingInt(Employee::salary));
 
