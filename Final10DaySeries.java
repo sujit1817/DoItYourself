@@ -518,3 +518,51 @@ List emps = List.of(
     new Employee("Cara", 80000));
 Optional<Employee> maxEmp = emps.stream().max(Comparator.comparingInt(Employee::salary));
 
+import java.util.*;
+
+public class Main {
+//     public static void moveZeros(int[] nums) {
+//   int j = 0;
+//   for(int i=0; i< nums.length;i++){
+//       if(nums[i]!=0){
+//           int temp = nums[i];
+//           nums[i]=nums[j];
+//           nums[j]=temp;
+//           j++;
+
+//       }
+//   }
+//   System.out.println(Arrays.toString(nums));
+// }
+// 	public static int storeWater(ArrayList<Integer> height) {
+// 		int maxWater=0;
+
+// 		for(int i=0; i<height.size(); i++) {
+// 			for(int j=i+1; j<height.size(); j++) {
+// 				int ht=Math.min(height.get(i),height.get(j));
+// 				int width=j-i;
+// 				//area
+// 				int currWater=ht*width;
+// 				maxWater = Math.max(maxWater, currWater);
+// 			}
+// 		}
+// 		return maxWater;
+// 	}
+
+	public static void main(String[] args) {
+		ArrayList<Integer> list = new ArrayList<>();
+		//1,8,6,2,5,4,8,3,7
+// 		list.add(1);
+// 		list.add(8);
+// 		list.add(6);
+// 		list.add(2);
+// 		list.add(5);
+// 		list.add(4);
+// 		list.add(8);
+// 		list.add(3);
+// 		list.add(7);
+		int[] nums= {0, 1, 0, 3, 12};
+		//System.out.println("Max water is : "+storeWater(list));
+		moveZeros(nums);
+	}
+}
