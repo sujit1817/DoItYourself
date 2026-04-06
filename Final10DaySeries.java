@@ -566,3 +566,36 @@ public class Main {
 		moveZeros(nums);
 	}
 }
+
+Mercedes-benz R&D
+	1 Middle of LinkedList (missed: told normal approach)
+	The best approach is to use Floyd's algorithm. fast and slow pointers
+class Solution {
+    public ListNode middleNode(ListNode head) {
+       ListNode fast = head, slow = head;
+        while(fast!=null && fast.next!=null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;//slow is at the middle  
+    }
+}
+	2 Java streams 
+		Find even numbers from a list of integers, square them, and sum them up.
+		List nums = List.of(1, 2, 3, 4, 5, 6, 7, 8);
+nums.stream().filter(n -> n % 2 == 0).mapToInt(n -> n*n).sum();
+
+3. AI project explain
+	How do you maintain security?
+	How was the search done by LLM?
+	Overall architecture from request to response
+	What are Embeddings?
+	what is vector db?
+	Difference between Vector DB and NoSQL Db?
+	security
+4. Java latest version? It is 26, but not aware yet
+	What is the higher version you are aware?
+	Java 17, but mostly aware of java 8
+	Java 17: record class, sealed classes, text blockc
+5. Monitoring in Java applications?
+6. Deployed where?
