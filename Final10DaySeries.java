@@ -599,3 +599,55 @@ nums.stream().filter(n -> n % 2 == 0).mapToInt(n -> n*n).sum();
 	Java 17: record class, sealed classes, text blockc
 5. Monitoring in Java applications?
 6. Deployed where?
+
+	***************************
+## Types of Garbage Collectors: ->
+	***************************
+1. Serial GC (-XX:+UseSerialGC)
+	Single-threaded collector
+┌──────────────┐
+│   GC Thread  │ → Stops application threads
+└──────────────┘
+Best for: Small applications, single-core systems
+	
+2. Parallel GC (-XX:+UseParallelGC)
+Multiple threads for collection
+┌───────┬───────┬───────┐
+│  GC1  │  GC2  │  GC3  │ → Parallel minor GC
+└───────┴───────┴───────┘
+Best for: Throughput-oriented applications
+Default: Java 8
+# Heap size configuration
+java -Xms512m -Xmx2g MyApp
+# -Xms: Initial heap size (512 MB)
+# -Xmx: Maximum heap size (2 GB)
+
+3. G1 GC (-XX:+UseG1GC)
+Heap divided into regions
+┌───┬───┬───┬───┬───┬───┬───┬───┐
+│ E │ S │ O │ E │ H │ O │ E │ S │
+└───┴───┴───┴───┴───┴───┴───┴───┘
+E=Eden, S=Survivor, O=Old, H=Humongous
+
+Best for: Large heaps (>4GB), predictable pause times
+Default: Java 9+
+
+4. ZGC (-XX:+UseZGC)
+Ultra-low latency (<10ms pauses)
+Concurrent, scalable
+Best for: Large heaps (TB), latency-sensitive apps
+Available: Java 11+
+
+	*************
+#GC Configuration : 
+
+	#Selection of GC
+	java -XX:+UseG1GC MyApp
+	java -XX:+UseZGC MyApp
+	
+# Heap size configuration
+java -Xms512m -Xmx2g MyApp
+# -Xms: Initial heap size (512 MB)
+# -Xmx: Maximum heap size (2 GB)
+
+
