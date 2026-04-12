@@ -650,4 +650,40 @@ java -Xms512m -Xmx2g MyApp
 # -Xms: Initial heap size (512 MB)
 # -Xmx: Maximum heap size (2 GB)
 
+## What is JPA?
+1. JPA is a Java specification used to interact with databases using objects instead of SQL.
 
+2. Instead of writing SQL queries, work with java objects(entities)
+
+🔁 Example
+
+Table: users
+Instead of SQL:
+SELECT * FROM users;
+
+Using JPA:
+List<User> users = userRepository.findAll();
+
+⚠️ Important Point:
+👉 JPA is not an implementation, it’s just a specification
+
+👉 Common implementation:
+Hibernate
+
+## What are JPA Repositories?
+👉 Repositories are interfaces provided by Spring Data JPA to perform CRUD operations without writing code.
+
+CrudRepository
+PagingAndSortingRepository
+JpaRepository
+
+
+CrudRepository
+     ↑
+PagingAndSortingRepository
+     ↑
+JpaRepository
+
+	JPA is a specification to manage relational data using Java objects, 
+	and Spring Data JPA provides repository interfaces like CrudRepository, PagingAndSortingRepository, 
+	and JpaRepository to perform database operations easily.
