@@ -687,3 +687,18 @@ JpaRepository
 	JPA is a specification to manage relational data using Java objects, 
 	and Spring Data JPA provides repository interfaces like CrudRepository, PagingAndSortingRepository, 
 	and JpaRepository to perform database operations easily.
+
+
+# Trustt Novopay
+L1 :
+Two sum
+streams
+Ecom db design
+
+L2 :
+JWT
+LL creation
+Deadlock
+Rest
+what is soap
+spring security
